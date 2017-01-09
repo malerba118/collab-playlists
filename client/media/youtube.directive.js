@@ -45,6 +45,10 @@ app.directive('youtube', function($window, $rootScope) {
                 scope.onFinish();
               }
             },
+            onError: function(event) {
+              //select next video
+              scope.onFinish();
+            },
             onReady: function(event) {
               player.cueVideoById(scope.videoid);
               scope.$watch('videoid', function(newValue, oldValue) {
