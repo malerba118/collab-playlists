@@ -9,6 +9,8 @@ app.factory('YoutubeService', ['$http', '$localStorage', '$rootScope', '$q', 'AP
                 part: 'snippet',
                 key: APIS.YOUTUBE_API.KEY,
                 type: 'video',
+                videoEmbeddable: true,
+                maxResults: 8,
                 videoCategoryId: 10,
                 q: query
               }
