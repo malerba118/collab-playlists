@@ -1,0 +1,20 @@
+
+  <h3>Create</h3>
+  <div layout-gt-sm="row">
+
+      <md-input-container class="md-block" flex-gt-sm>
+        <label>Playlist Name</label>
+        <input md-maxlength="30" required name="name" ng-model="newQueue.name" />
+      </md-input-container>
+
+      <div flex="5" hide-xs hide-sm>
+        <!-- Spacer //-->
+      </div>
+
+      <md-input-container class="md-block" flex-gt-sm>
+        <label>Passcode (optional)</label>
+        <input name="passcode" ng-model="newQueue.passcode" />
+      </md-input-container>
+
+</div>
+<md-button  ng-click="createQueue(newQueue.name, newQueue.passcode)">Create</md-button>

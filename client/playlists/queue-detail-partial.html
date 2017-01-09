@@ -1,0 +1,18 @@
+
+
+<youtube ng-if="youtube.ready && queue.details.owner" width="{{yt.width}}" height="{{yt.height}}" videoid="{{yt.selectedVideoId}}" on-finish="selectNext()"></youtube>
+
+<md-nav-bar md-selected-nav-item="nav.currentNavItem" nav-bar-aria-label="navigation links">
+      <md-nav-item md-nav-sref="root.queue-detail.add" name="page1">Add songs</md-nav-item>
+      <md-nav-item md-nav-sref="root.queue-detail.playing" name="page2">Playlist</md-nav-item>
+      <!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
+      <md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
+      <md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
+      -->
+</md-nav-bar>
+
+<div layout="row">
+  <div flex="5"></div>
+  <div flex ui-view></div>
+  <div flex="5"></div>
+</div>

@@ -1,0 +1,14 @@
+<md-toolbar>
+      <div class="md-toolbar-tools">
+        <a ui-sref="root.queue-list.search">
+          <h2>
+            Party Playlists
+          </h2>
+        </a>
+        <span flex></span>
+        <md-button ng-show="user.authenticated" ng-click="logOut()" aria-label="Learn More">Log out</md-button>
+      </div>
+    </md-toolbar>
+
+
+<div ui-view></div>
