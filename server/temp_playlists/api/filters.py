@@ -14,5 +14,5 @@ class QueueOrderFilterBackend(filters.BaseFilterBackend):
             return queryset
         user_position = Location(latitude=latitude, longitude=longitude)
         #filter to within 50 miles
-        queues = list(filter(lambda q: q.location.distance(user_position) < 500, queryset))
+        queues = list(filter(lambda q: q.location.distance(user_position) < 5000, queryset))
         return queues
