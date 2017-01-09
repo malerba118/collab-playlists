@@ -27,13 +27,13 @@ router.register(r'groups', views.GroupViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^auth/', include('rest_framework_social_oauth2.urls')),
-    url(r'^', include(router.urls)),
-    url(r'^queues/(?P<pk>[0-9]+)/permissions/', views.QueuePermissions.as_view(), name="queue-permission"),
-    url(r'^queues/(?P<pk>[0-9]+)/items/', views.QueueItemList.as_view(), name="queue-item-list"),
-    url(r'^queues/(?P<pk>[0-9]+)/select-next/', views.QueueNext.as_view(), name="queue-next"),
-    url(r'^queues/(?P<pk>[0-9]+)/', views.QueueDetail.as_view(), name="queue-detail"),
-    url(r'^queues/', views.QueueList.as_view(), name="queue-list"),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/admin/', include(admin.site.urls)),
+    url(r'^api/auth/', include('rest_framework_social_oauth2.urls')),
+    url(r'^api/', include(router.urls)),
+    url(r'^api/queues/(?P<pk>[0-9]+)/permissions/', views.QueuePermissions.as_view(), name="queue-permission"),
+    url(r'^api/queues/(?P<pk>[0-9]+)/items/', views.QueueItemList.as_view(), name="queue-item-list"),
+    url(r'^api/queues/(?P<pk>[0-9]+)/select-next/', views.QueueNext.as_view(), name="queue-next"),
+    url(r'^api/queues/(?P<pk>[0-9]+)/', views.QueueDetail.as_view(), name="queue-detail"),
+    url(r'^api/queues/', views.QueueList.as_view(), name="queue-list"),
+    url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
