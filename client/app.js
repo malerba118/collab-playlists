@@ -279,7 +279,7 @@ app.config(['$httpProvider', 'APIS', function ($httpProvider, APIS) {
                         return config;
                   },
                  'responseError': function (response) {
-                     if (response.status === 401 && config.url.startsWith(APIS.QUEUES_API.BASE_URL)) {
+                     if (response.status === 401 && response.config.url.startsWith(APIS.QUEUES_API.BASE_URL)) {
                          delete $localStorage.accessToken;
                          $location.path('/login/');
                      }
