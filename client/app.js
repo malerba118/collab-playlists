@@ -51,7 +51,7 @@ app.constant('APIS', {
     KEY: 'AIzaSyBph1aSn5ieKc2WEchkRy_dep7TuU3IRsI'
   },
   QUEUES_API: {
-    BASE_URL: 'http://localhost:8000/api',
+    BASE_URL: 'http://collabplaylists.com/api',
     CLIENT_ID: 'ocYZ39OBL5g3Gop9MCElJ7YksEsekERQjvrYCcIN',
     CLIENT_SECRET: 'weaNjNMvqfzZ7Ri0zTCrpnMnotRSEWgNoO4b6B8LU0PVgTFkekaJm7Nx8rwKpIiNdSjnvpQPCRufT5p8Dfpvosc0qzbWO0kLtauSudl2dJWvQXmQb3p9WJJoaa8VsJCB'
   },
