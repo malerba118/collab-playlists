@@ -2,6 +2,8 @@ var app = angular.module('app', [
    'ngStorage',
    'ui.router',
    'ngMaterial',
+   'ngAnimate',
+   'ng-fx',
 ]);
 
 app.run(function($window, $rootScope) {
@@ -79,7 +81,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       abstract: true,
       url: "/",
       templateUrl: "root.html",
-      controller: 'HomeController'
+      controller: 'RootController'
     })
     .state('root.login', {
       url: "login/",
@@ -258,7 +260,10 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
 
         $scope.deleteItem = function(itemId) {
           QueueService.deleteItem($stateParams.queueId, itemId).then(function() {
-            $scope.getItems();
+            $scope.queue.items = $scope.queue.items.filter(function(item) {
+              return item.itemId !== itemId;
+            });
+            // $scope.getItems();
           });
         };
 
@@ -282,18 +287,19 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
                    '<md-dialog aria-label="List dialog">' +
                    '  <md-dialog-content style="max-width: 400px;">'+
                    '  <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">'+
-                   '    <iframe width="420" height="315" style="position: absolute; top: -1px; left: -2px; width: 100%; height: 100%;" ng-src="{{video.id | EmbedUrl }}"></iframe>'+
+                   '    <iframe width="420" height="315" style="position: absolute; top: -1px; left: -2spx; width: 100%; height: 100%;" ng-src="{{video.id | EmbedUrl }}"></iframe>'+
                    '  </div>'+
                   //  '    <img style="height: 100%; width: 100%; object-fit: contain;" ng-src="{{video.snippet.thumbnails.high.url}}" alt="Description" />'+
-                   '    <md-list>'+
-                   '      <md-list-item class="md-3-line">'+
-                   '        <span>'+
+                   '    <div layout="column">'+
+                   '        <div layout-margin>'+
                    '          <p class="md-title">{{video.snippet.title}}</p>'+
+                   '        </div>'+
+                   '        <md-divider></md-divider>'+
+                   '        <div layout-margin>'+
                    '          <h4>{{video.snippet.channelTitle}}</h4>'+
                    '          <p>Duration: {{duration | date: "HH:mm:ss" : "UTC"}}</p>'+
-                   '        </span>'+
-                   '      </md-list-item>'+
-                   '    </md-list>'+
+                   '        </div>'+
+                   '    </div>'+
                    '    <md-divider></md-divider>'+
                    '  </md-dialog-content>' +
                    '  <md-dialog-actions>' +

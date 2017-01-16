@@ -5,7 +5,7 @@
     <md-list>
 
       <!-- IF OWNER -->
-      <md-list-item ng-if="queue.details.owner" ng-click="selectItem(item.itemId)"  class="md-3-line" ng-repeat="item in queue.items">
+      <md-list-item ng-if="queue.details.owner" ng-click="selectItem(item.itemId)" class="md-3-line" ng-repeat="item in queue.items">
         <img ng-src="{{item.snippet.thumbnails.default.url}}" class="md-avatar" alt="">
         <div layout="row" class="md-list-item-text">
           <span flex>
