@@ -1,9 +1,7 @@
 var app = angular.module('app', [
    'ngStorage',
    'ui.router',
-   'ngMaterial',
-   'ngAnimate',
-   'ng-fx',
+   'ngMaterial'
 ]);
 
 app.run(function($window, $rootScope) {
