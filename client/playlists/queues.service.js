@@ -67,10 +67,18 @@ app.factory('QueueService', ['$http', '$localStorage', '$rootScope', '$q', 'APIS
           return $http.post(APIS.QUEUES_API.BASE_URL + '/queues/' + queueId + '/select-next/').then(success, error);
       };
 
-      service.selectItem = function (queueId, trackId) {
+      service.selectItem = function (queueId, itemId) {
         return $http.post(APIS.QUEUES_API.BASE_URL + '/queues/' + queueId + '/select-next/', {
-          track_id: trackId,
+          item_id: itemId,
         }).then(success, error);
+      };
+
+      service.deleteItem = function (queueId, itemId) {
+          return $http.delete(APIS.QUEUES_API.BASE_URL + '/queues/' + queueId + '/items/' + itemId + "/").then(success, error);
+      };
+
+      service.deleteQueue = function (queueId) {
+          return $http.delete(APIS.QUEUES_API.BASE_URL + '/queues/' + queueId + "/").then(success, error);
       };
 
       return service;

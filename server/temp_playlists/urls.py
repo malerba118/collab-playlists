@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^api/auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^api/', include(router.urls)),
     url(r'^api/queues/(?P<pk>[0-9]+)/permissions/', views.QueuePermissions.as_view(), name="queue-permission"),
+    url(r'^api/queues/(?P<pk>[0-9]+)/items/(?P<item_pk>[0-9]+)/', views.QueueItemDetail.as_view(), name="queue-item-detail"),
     url(r'^api/queues/(?P<pk>[0-9]+)/items/', views.QueueItemList.as_view(), name="queue-item-list"),
     url(r'^api/queues/(?P<pk>[0-9]+)/select-next/', views.QueueNext.as_view(), name="queue-next"),
     url(r'^api/queues/(?P<pk>[0-9]+)/', views.QueueDetail.as_view(), name="queue-detail"),

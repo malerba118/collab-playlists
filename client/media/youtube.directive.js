@@ -6,6 +6,7 @@ app.directive('youtube', function($window, $rootScope) {
       height: "@",
       width: "@",
       videoid: "@",
+      itemid: "@",
       onFinish: "&"
     },
 
@@ -51,7 +52,7 @@ app.directive('youtube', function($window, $rootScope) {
             },
             onReady: function(event) {
               player.cueVideoById(scope.videoid);
-              scope.$watch('videoid', function(newValue, oldValue) {
+              scope.$watch('itemid', function(newValue, oldValue) {
                 if (newValue == oldValue) {
                   return;
                 }

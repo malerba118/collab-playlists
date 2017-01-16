@@ -5,6 +5,8 @@ var app = angular.module('app', [
 ]);
 
 app.run(function($window, $rootScope) {
+
+   //PROD
   (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -13,6 +15,7 @@ app.run(function($window, $rootScope) {
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
+  //YOUTUBE LOAD IFRAME API
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -51,14 +54,20 @@ app.constant('APIS', {
     KEY: 'AIzaSyBph1aSn5ieKc2WEchkRy_dep7TuU3IRsI'
   },
   QUEUES_API: {
-    BASE_URL: 'http://collabplaylists.com/api',
-    CLIENT_ID: 'ocYZ39OBL5g3Gop9MCElJ7YksEsekERQjvrYCcIN',
-    CLIENT_SECRET: 'weaNjNMvqfzZ7Ri0zTCrpnMnotRSEWgNoO4b6B8LU0PVgTFkekaJm7Nx8rwKpIiNdSjnvpQPCRufT5p8Dfpvosc0qzbWO0kLtauSudl2dJWvQXmQb3p9WJJoaa8VsJCB'
+    BASE_URL: 'http://localhost:8000/api',
+    CLIENT_ID: "ocYZ39OBL5g3Gop9MCElJ7YksEsekERQjvrYCcIN",
+    CLIENT_SECRET: "weaNjNMvqfzZ7Ri0zTCrpnMnotRSEWgNoO4b6B8LU0PVgTFkekaJm7Nx8rwKpIiNdSjnvpQPCRufT5p8Dfpvosc0qzbWO0kLtauSudl2dJWvQXmQb3p9WJJoaa8VsJCB"
   },
   YOUTUBE_API: {
     BASE_URL: 'https://www.googleapis.com/youtube/v3',
     KEY: 'AIzaSyBph1aSn5ieKc2WEchkRy_dep7TuU3IRsI'
   }
+});
+
+app.filter('EmbedUrl', function ($sce) {
+  return function(uId) {
+    return $sce.trustAsResourceUrl('https://www.youtube.com/embed/' + uId  );
+  };
 });
 
 
@@ -167,6 +176,13 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
             $scope.queues = data.results;
           });
         };
+
+        $scope.deleteQueue = function(queueId) {
+          QueueService.deleteQueue(queueId).then(function(data){
+            $scope.getMyQueues();
+          });
+        };
+
         $scope.getMyQueues();
       }
     })
@@ -181,7 +197,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       abstract: true,
       url: "queues/:queueId/",
       templateUrl: "playlists/queue-detail-partial.html",
-      controller: function($scope, $stateParams, $state, $q, $window, YoutubeService, QueueService) {
+      controller: function($scope, $stateParams, $state, $q, $window, $mdDialog, YoutubeService, QueueService) {
 
         $scope.nav = {};
 
@@ -209,15 +225,24 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           queueInfo = QueueService.getQueue($stateParams.queueId)
 
           $q.all({items: itemsInfo, queue: queueInfo})
-          .then(function(data) {
-            listOfIds = data.items.results.map(function(item){return item.track_id});
+          .then(function(queueData) {
+            var listOfIds = queueData.items.results.map(function(item){return item.track_id});
             YoutubeService.getVideos(listOfIds).then(function(data){
-              console.log(data);
               $scope.queue.items = data.items;
+              //Append item ids to tracks
+              var j = 0;
+              for (i = 0; i < queueData.items.results.length; i++) {
+                if (queueData.items.results[i].track_id === $scope.queue.items[j].id) {
+                  $scope.queue.items[j].itemId = queueData.items.results[i].id;
+                  j++;
+                }
+              }
             });
-            $scope.queue.details = data.queue;
-            if (data.queue.selected != null) {
-              $scope.yt.selectedVideoId = data.queue.selected.track_id;
+            console.log($scope.queue.items);
+            $scope.queue.details = queueData.queue;
+            if (queueData.queue.selected != null) {
+              $scope.yt.selectedVideoId = queueData.queue.selected.track_id;
+              $scope.yt.selectedItemId = queueData.queue.selected.id;
             }
           });
         };
@@ -231,23 +256,83 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           });
         };
 
-        $scope.selectItem = function(trackId) {
-          console.log(trackId);
-          QueueService.selectItem($stateParams.queueId, trackId).then(function() {
+        $scope.deleteItem = function(itemId) {
+          QueueService.deleteItem($stateParams.queueId, itemId).then(function() {
             $scope.getItems();
           });
         };
 
+        $scope.selectItem = function(itemId) {
+          console.log(itemId);
+          QueueService.selectItem($stateParams.queueId, itemId).then(function() {
+            $scope.getItems();
+          });
+        };
 
+        $scope.showVideoDetail = function(ev, trackId) {
+          // Appending dialog to document.body to cover sidenav in docs app
+          YoutubeService.getVideos([trackId]).then(function(data) {
+            var video = data.items[0];
+            if (video) {
+              var parentEl = angular.element(document.body);
+              $mdDialog.show({
+                 parent: parentEl,
+                 targetEvent: ev,
+                 template:
+                   '<md-dialog aria-label="List dialog">' +
+                   '  <md-dialog-content style="max-width: 400px;">'+
+                   '  <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">'+
+                   '    <iframe width="420" height="315" style="position: absolute; top: -1px; left: -2px; width: 100%; height: 100%;" ng-src="{{video.id | EmbedUrl }}"></iframe>'+
+                   '  </div>'+
+                  //  '    <img style="height: 100%; width: 100%; object-fit: contain;" ng-src="{{video.snippet.thumbnails.high.url}}" alt="Description" />'+
+                   '    <md-list>'+
+                   '      <md-list-item class="md-3-line">'+
+                   '        <span>'+
+                   '          <p class="md-title">{{video.snippet.title}}</p>'+
+                   '          <h4>{{video.snippet.channelTitle}}</h4>'+
+                   '          <p>Duration: {{duration | date: "HH:mm:ss" : "UTC"}}</p>'+
+                   '        </span>'+
+                   '      </md-list-item>'+
+                   '    </md-list>'+
+                   '    <md-divider></md-divider>'+
+                   '  </md-dialog-content>' +
+                   '  <md-dialog-actions>' +
+                   '    <md-button ng-click="closeDialog()" class="md-primary">' +
+                   '      Close' +
+                   '    </md-button>' +
+                   '  </md-dialog-actions>' +
+                   '</md-dialog>',
+                 locals: {
+                   video: video
+                 },
+                 controller: function ($scope, $mdDialog, video) {
+                    $scope.video = video;
+                    $scope.duration = moment.duration(video.contentDetails.duration).asMilliseconds();
+                    $scope.closeDialog = function() {
+                      $mdDialog.hide();
+                    }
+                  }
+              }).then(function(result) {
+                console.log("okay");
+
+              }, function() {
+                //clicked cancel
+                $scope.status = 'You didn\'t name your dog.';
+              });
+            }
+          });
+        };
 
       }
     })
     .state('root.queue-detail.add', {
       url: "add/",
       templateUrl: "playlists/queue-detail-add-partial.html",
-      controller: function($scope) {
+      controller: function($scope, $mdDialog, YoutubeService) {
         $scope.getItems();
         $scope.nav.currentNavItem = "page1";
+
+
 
       }
     })

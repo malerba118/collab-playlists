@@ -5,24 +5,31 @@
     <md-list>
 
       <!-- IF OWNER -->
-      <md-list-item ng-if="queue.details.owner" ng-click="selectItem(item.id)"  class="md-3-line" ng-repeat="item in queue.items">
+      <md-list-item ng-if="queue.details.owner" ng-click="selectItem(item.itemId)"  class="md-3-line" ng-repeat="item in queue.items">
         <img ng-src="{{item.snippet.thumbnails.default.url}}" class="md-avatar" alt="">
-        <div class="md-list-item-text">
-          <h3 ng-if="item.id===yt.selectedVideoId" md-colors="{color: 'warn-600'}">{{item.snippet.title}}</h3>
-          <h3 ng-if="item.id!==yt.selectedVideoId">{{item.snippet.title}}</h3>
-          <h4>{{item.snippet.channelTitle}}</h4>
-          <p>{{item.snippet.publishedAt | date : 'longDate'}}</p>
+        <div layout="row" class="md-list-item-text">
+          <span flex>
+            <h3 ng-if="item.itemId===yt.selectedItemId" md-colors="{color: 'warn-600'}">{{item.snippet.title}}</h3>
+            <h3 ng-if="item.itemId!==yt.selectedItemId">{{item.snippet.title}}</h3>
+            <h4>{{item.snippet.channelTitle}}</h4>
+            <p>{{item.snippet.publishedAt | date : 'longDate'}}</p>
+          </span>
+          <span layout="row" layout-align="end center">
+            <md-button class="md-icon-button" ng-click="deleteItem(item.itemId)">
+              <i class="material-icons">delete_forever</i>
+            </md-button>
+          </span>
         </div>
         <md-divider md-inset ng-if="!$last"></md-divider>
       </md-list-item>
 
 
       <!-- IF NOT OWNER -->
-      <md-list-item ng-if="!queue.details.owner" class="md-3-line" ng-repeat="item in queue.items">
+      <md-list-item ng-if="!queue.details.owner" ng-click="showVideoDetail($event, item.id)" class="md-3-line" ng-repeat="item in queue.items">
         <img ng-src="{{item.snippet.thumbnails.default.url}}" class="md-avatar" alt="">
         <div class="md-list-item-text">
-          <h3 ng-if="item.id===yt.selectedVideoId" md-colors="{color: 'warn-600'}">{{item.snippet.title}}</h3>
-          <h3 ng-if="item.id!==yt.selectedVideoId">{{item.snippet.title}}</h3>
+          <h3 ng-if="item.itemId===yt.selectedItemId" md-colors="{color: 'warn-600'}">{{item.snippet.title}}</h3>
+          <h3 ng-if="item.itemId!==yt.selectedItemId">{{item.snippet.title}}</h3>
           <h4>{{item.snippet.channelTitle}}</h4>
           <p>{{item.snippet.publishedAt | date : 'longDate'}}</p>
         </div>

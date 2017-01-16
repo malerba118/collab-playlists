@@ -29,7 +29,7 @@ app.factory('YoutubeService', ['$http', '$localStorage', '$rootScope', '$q', 'AP
 
           return $http.get(APIS.YOUTUBE_API.BASE_URL + "/videos", {
             params : {
-              part: 'snippet',
+              part: 'snippet,contentDetails',
               key: APIS.YOUTUBE_API.KEY,
               id: videoIds.toString()
             }

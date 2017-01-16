@@ -9,7 +9,7 @@
   </div>
   <md-content>
     <md-list>
-      <md-list-item class="md-3-line" ng-repeat="item in searchResults">
+      <md-list-item ng-click="showVideoDetail($event, item.id.videoId)" class="md-3-line" ng-repeat="item in searchResults">
         <img src="{{item.snippet.thumbnails.default.url}}" class="md-avatar" alt="">
         <div layout="row" class="md-list-item-text">
             <span flex>

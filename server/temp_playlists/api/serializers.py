@@ -18,7 +18,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('track_id', 'creator')
+        fields = ('id', 'track_id', 'creator')
         read_only_fields = ('creator',)
 
 

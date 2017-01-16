@@ -67,6 +67,38 @@ class QueueDetail(RetrieveDestroyAPIView):
     def get_serializer_context(self):
         return {'request': self.request}
 
+    def perform_destroy(self, instance):
+        pk = self.kwargs.get('pk', None)
+        queue = get_object_or_404(Queue, pk=pk)
+        if self.request.user != queue.creator:
+            return HttpResponseForbidden()
+        queue.delete()
+
+class QueueItemDetail(RetrieveDestroyAPIView):
+    """
+    GET: Get list of tips on a spot
+    POST: Create new tip on a spot
+    """
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        return Queue.objects.all()
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def perform_destroy(self, instance):
+        pk = self.kwargs.get('pk', None)
+        queue = get_object_or_404(Queue, pk=pk)
+        item_pk = self.kwargs.get('item_pk', None)
+        item = get_object_or_404(Item, pk=item_pk)
+        if self.request.user != queue.creator:
+            return HttpResponseForbidden()
+        if queue.selected == item:
+            queue.selected = None
+            queue.save()
+        item.delete()
 
 class QueueItemList(ListCreateAPIView):
     """
@@ -105,10 +137,10 @@ class QueueNext(APIView):
         queue = get_object_or_404(Queue, pk=pk)
         if queue.creator != request.user:
             return HttpResponseForbidden()
-        track_id = request.data.get("track_id", None)
-        if track_id != None:
+        item_id = request.data.get("item_id", None)
+        if item_id != None:
             #select specified item
-            item = get_object_or_404(Item, queue=queue, track_id=track_id)
+            item = get_object_or_404(Item, queue=queue, id=item_id)
             queue.selected = item
             queue.save()
             selected = item

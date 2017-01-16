@@ -1,6 +1,6 @@
 
 
-<youtube ng-if="youtube.ready && queue.details.owner" width="{{yt.width}}" height="{{yt.height}}" videoid="{{yt.selectedVideoId}}" on-finish="selectNext()"></youtube>
+<youtube ng-if="youtube.ready && queue.details.owner" width="{{yt.width}}" height="{{yt.height}}" videoid="{{yt.selectedVideoId}}" itemid="{{yt.selectedItemId}}" on-finish="selectNext()"></youtube>
 
 <md-nav-bar md-selected-nav-item="nav.currentNavItem" nav-bar-aria-label="navigation links">
       <md-nav-item md-nav-sref="root.queue-detail.add" name="page1">Add songs</md-nav-item>

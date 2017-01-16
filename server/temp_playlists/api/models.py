@@ -26,13 +26,13 @@ class Queue(models.Model):
         if self.selected == None:
             next_index = 0
         else:
-            curr_index = self.selected.index
+            curr_index = list(self.items()).index(self.selected)
             if curr_index < len(self.items()) - 1:
                 next_index = curr_index + 1
             else:
                 next_index = curr_index
         print(next_index)
-        self.selected = Item.objects.get(queue=self, index=next_index)
+        self.selected = self.items()[next_index]
         self.save()
         return self.selected
 
@@ -44,7 +44,7 @@ class Queue(models.Model):
         return len(self.items()) == 0
 
     def items(self):
-        return Item.objects.filter(queue=self).order_by("index")
+        return Item.objects.filter(queue=self).order_by("timestamp")
 
     def add_item(self, track_id, creator):
         item = Item.objects.create(
